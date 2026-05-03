@@ -1,0 +1,58 @@
+{
+  "name": "vs-picgo-paste",
+  "displayName": "PicGo Paste Image",
+  "description": "剪贴板图片通过 PicGo 上传并插入 Markdown",
+  "version": "1.0.0",
+  "publisher": "local",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/local/vs-picgo-paste"
+  },
+  "engines": {
+    "vscode": "^1.60.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [],
+  "main": "./extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "picgo-paste.uploadImage",
+        "title": "PicGo: Paste Image"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "picgo-paste.uploadImage",
+        "key": "ctrl+alt+v",
+        "when": "editorTextFocus"
+      }
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "command": "picgo-paste.uploadImage",
+          "when": "editorTextFocus",
+          "group": "9_cutcopypaste"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "PicGo Paste",
+      "properties": {
+        "picgoPaste.picgoPath": {
+          "type": "string",
+          "default": "picgo",
+          "description": "PicGo CLI 命令路径 (默认 picgo，如需指定完整路径如 D:\\Tools\\picgo.exe)"
+        },
+        "picgoPaste.tempDir": {
+          "type": "string",
+          "default": "",
+          "description": "临时图片保存目录 (留空则使用系统临时目录)"
+        }
+      }
+    }
+  }
+}
