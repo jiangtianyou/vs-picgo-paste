@@ -1,6 +1,15 @@
 # PicGo Paste Image
 
+[![VS Code Marketplace](https://img.shields.io/badge/VS%20Code-Marketplace-blue)](https://marketplace.visualstudio.com/items?itemName=jiangtianyou.vs-picgo-paste)
+
 剪贴板图片一键上传图床并插入 Markdown。
+
+## 功能
+
+- 读取系统剪贴板中的图片
+- 调用本地 PicGo CLI 上传至图床
+- 自动插入 `![image](url)` 到光标位置
+- 支持快捷键、命令面板、右键菜单三种触发方式
 
 ## 安装
 
