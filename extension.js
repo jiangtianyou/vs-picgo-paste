@@ -1,9 +1,8 @@
 const vscode = require('vscode');
-const { exec, execFile } = require('child_process');
+const { exec } = require('child_process');
 const path = require('path');
 const fs = require('fs');
 const os = require('os');
-const crypto = require('crypto');
 
 function activate(context) {
   const disposable = vscode.commands.registerCommand('picgo-paste.uploadImage', async () => {
@@ -27,7 +26,8 @@ async function uploadAndInsertImage() {
     return;
   }
 
-  const tempFile = path.join(tempDir, `.picgo_${crypto.randomUUID()}.png`);
+  const ts = new Date().toISOString().replace(/[-:T]/g, '').slice(0, 14);
+  const tempFile = path.join(tempDir, `picgo_${ts}.png`);
   await saveClipboardImageToFile(tempFile);
 
   await vscode.window.withProgress(
@@ -54,15 +54,9 @@ async function uploadAndInsertImage() {
 
 function saveClipboardImageToFile(filePath) {
   return new Promise((resolve, reject) => {
-    const psScript = `
-Add-Type -AssemblyName System.Windows.Forms
-Add-Type -AssemblyName System.Drawing
-$img = [System.Windows.Forms.Clipboard]::GetImage()
-if ($null -eq $img) { exit 1 }
-$img.Save('${filePath.replace(/\\/g, '\\\\')}', [System.Drawing.Imaging.ImageFormat]::Png)
-exit 0
-`;
-    execFile('powershell', ['-NoProfile', '-NonInteractive', '-Command', psScript], { timeout: 10000 }, (err, stdout, stderr) => {
+    const psScript = `Add-Type -AssemblyName System.Windows.Forms; Add-Type -AssemblyName System.Drawing; $img = [System.Windows.Forms.Clipboard]::GetImage(); if ($null -eq $img) { exit 1 }; $img.Save('${filePath.replace(/'/g, "''")}', [System.Drawing.Imaging.ImageFormat]::Png); exit 0`;
+    const encoded = Buffer.from(psScript, 'utf16le').toString('base64');
+    exec(`powershell -NoProfile -NonInteractive -EncodedCommand ${encoded}`, { timeout: 10000, windowsHide: true }, (err) => {
       if (err) {
         reject(new Error('剪贴板中没有图片，请先截图或复制图片'));
         return;
