@@ -2,7 +2,7 @@
   "name": "vs-picgo-paste",
   "displayName": "PicGo Paste Image",
   "description": "剪贴板图片通过 PicGo 上传并插入 Markdown",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "publisher": "jiangtianyou",
   "icon": "icon.png",
   "repository": {
