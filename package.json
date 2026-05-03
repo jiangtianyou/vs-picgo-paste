@@ -6,7 +6,7 @@
   "publisher": "local",
   "repository": {
     "type": "git",
-    "url": "https://github.com/local/vs-picgo-paste"
+    "url": "https://github.com/jiangtianyou/vs-picgo-paste"
   },
   "engines": {
     "vscode": "^1.60.0"
