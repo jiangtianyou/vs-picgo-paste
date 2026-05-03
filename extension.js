@@ -5,14 +5,15 @@ const fs = require('fs');
 const os = require('os');
 
 function activate(context) {
-  const disposable = vscode.commands.registerCommand('picgo-paste.uploadImage', async () => {
-    try {
-      await uploadAndInsertImage();
-    } catch (err) {
-      vscode.window.showErrorMessage(`PicGo 上传失败: ${err.message}`);
-    }
-  });
-  context.subscriptions.push(disposable);
+  context.subscriptions.push(
+    vscode.commands.registerCommand('picgo-paste.uploadImage', async () => {
+      try { await uploadAndInsertImage(); }
+      catch (err) { vscode.window.showErrorMessage(`PicGo 上传失败: ${err.message}`); }
+    }),
+    vscode.commands.registerCommand('picgo-paste.formatJson', () => formatJson()),
+    vscode.commands.registerCommand('picgo-paste.urlEncode', () => urlEncode()),
+    vscode.commands.registerCommand('picgo-paste.urlDecode', () => urlDecode())
+  );
 }
 
 async function uploadAndInsertImage() {
@@ -88,6 +89,42 @@ function runPicgoUpload(picgoPath, filePath) {
       reject(new Error(`未能从 picgo 输出中解析到 URL:\n${output}`));
     });
   });
+}
+
+function getSelectedText() {
+  const editor = vscode.window.activeTextEditor;
+  if (!editor || editor.selection.isEmpty) return null;
+  return { text: editor.document.getText(editor.selection), editor, selection: editor.selection };
+}
+
+function formatJson() {
+  const sel = getSelectedText();
+  if (!sel) return vscode.window.showWarningMessage('请先选中文本');
+  try {
+    const obj = JSON.parse(sel.text);
+    const formatted = JSON.stringify(obj, null, 2);
+    sel.editor.edit(eb => eb.replace(sel.selection, formatted));
+  } catch (e) {
+    vscode.window.showErrorMessage(`Invalid JSON: ${e.message}`);
+  }
+}
+
+function urlEncode() {
+  const sel = getSelectedText();
+  if (!sel) return vscode.window.showWarningMessage('请先选中文本');
+  const encoded = encodeURIComponent(sel.text);
+  sel.editor.edit(eb => eb.replace(sel.selection, encoded));
+}
+
+function urlDecode() {
+  const sel = getSelectedText();
+  if (!sel) return vscode.window.showWarningMessage('请先选中文本');
+  try {
+    const decoded = decodeURIComponent(sel.text);
+    sel.editor.edit(eb => eb.replace(sel.selection, decoded));
+  } catch (e) {
+    vscode.window.showErrorMessage(`Invalid URL encoding: ${e.message}`);
+  }
 }
 
 function deactivate() {}

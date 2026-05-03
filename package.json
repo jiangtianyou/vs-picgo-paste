@@ -2,7 +2,7 @@
   "name": "vs-picgo-paste",
   "displayName": "PicGo Paste Image",
   "description": "剪贴板图片通过 PicGo 上传并插入 Markdown",
-  "version": "1.0.5",
+  "version": "1.1.0",
   "publisher": "jiangtianyou",
   "icon": "icon.png",
   "repository": {
@@ -22,6 +22,18 @@
       {
         "command": "picgo-paste.uploadImage",
         "title": "PicGo: Paste Image"
+      },
+      {
+        "command": "picgo-paste.formatJson",
+        "title": "Format JSON"
+      },
+      {
+        "command": "picgo-paste.urlEncode",
+        "title": "URL Encode"
+      },
+      {
+        "command": "picgo-paste.urlDecode",
+        "title": "URL Decode"
       }
     ],
     "keybindings": [
@@ -36,6 +48,21 @@
         {
           "command": "picgo-paste.uploadImage",
           "when": "editorTextFocus",
+          "group": "9_cutcopypaste"
+        },
+        {
+          "command": "picgo-paste.formatJson",
+          "when": "editorHasSelection",
+          "group": "9_cutcopypaste"
+        },
+        {
+          "command": "picgo-paste.urlEncode",
+          "when": "editorHasSelection",
+          "group": "9_cutcopypaste"
+        },
+        {
+          "command": "picgo-paste.urlDecode",
+          "when": "editorHasSelection",
           "group": "9_cutcopypaste"
         }
       ]
